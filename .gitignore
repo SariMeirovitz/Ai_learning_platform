@@ -16,6 +16,7 @@ obj/
 .env
 .env.local
 .env.*.local
+**/*.tsbuildinfo
 
 # 🧭 IDEs & Editors
 .vscode/

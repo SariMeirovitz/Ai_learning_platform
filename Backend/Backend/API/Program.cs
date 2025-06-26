@@ -11,6 +11,18 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
+
 // רישום DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Users\\משתמש\\Desktop\\שרי מסלול\\פרויקט פרקטיקום\\Backend\\Backend\\DAL\\database\\PlatformDB.mdf\";Integrated Security=True;Connect Timeout=30"));
@@ -47,6 +59,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowSpecificOrigin");
 
 app.UseAuthorization();
 

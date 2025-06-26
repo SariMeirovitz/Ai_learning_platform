@@ -38,6 +38,15 @@ namespace API.Controllers
             return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
         }
 
+        [HttpPost("login")]
+        public ActionResult<User> Login([FromBody] LoginRequest request)
+        {
+            var user = _userBl.GetAll().FirstOrDefault(u => u.Phone == request.Phone);
+            if (user == null)
+                return Unauthorized("User not found");
+            return Ok(user);
+        }
+
         [HttpPut("{id}")]
         public ActionResult<User> Update(int id, [FromBody] BLUser user)
         {
