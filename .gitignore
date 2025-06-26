@@ -1,0 +1,51 @@
+# ==================== Backend (C# / ASP.NET Core) ====================
+
+# תיקיות build
+bin/
+obj/
+
+# קבצים של Visual Studio
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.VC.db
+*.VC.VC.opendb
+
+# קבצי VS Code
+.vscode/
+
+# קבצי לוגים זמניים
+*.log
+*.tmp
+
+# קבצי publish
+wwwroot/
+
+# ==================== Frontend (React / TypeScript) ====================
+
+# תיקיות node_modules
+**/node_modules/
+
+# תיקיות build/dist
+**/build/
+**/dist/
+
+# קבצי environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ==================== SQL Server LocalDB ====================
+
+# קבצי מסדי נתונים מקומיים
+*.mdf
+*.ldf
+
+# ==================== General ====================
+
+# קבצים שנוצרים אוטומטית
+.DS_Store
+Thumbs.db
