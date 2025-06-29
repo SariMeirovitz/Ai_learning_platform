@@ -53,12 +53,11 @@ export async function fetchSubCategories(categoryId: number) {
 
 // Prompts (lessons)
 export async function sendPrompt(data: {
-  userId: string;
   categoryId: number;
   subCategoryId: number;
-  prompt: string;
+  prompt1: string;
 }) {
-  const res = await fetch(`${API_BASE}/Prompt`, {
+  const res = await fetch(`${API_BASE}/Prompt/submit`, {
     method: 'POST',
     headers: buildHeaders(),
     body: JSON.stringify(data),
@@ -66,6 +65,7 @@ export async function sendPrompt(data: {
   if (!res.ok) throw new Error('Failed to send prompt');
   return res.json();
 }
+
 
 // קריאה לאדמין - כל המשתמשים עם היסטוריה
 export async function fetchAllUsersWithPrompts() {

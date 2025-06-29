@@ -64,7 +64,10 @@ export const fetchSubCategoriesThunk = createAsyncThunk(
 // שליחת prompt
 export const sendPromptThunk = createAsyncThunk(
   'prompts/send',
-  async (data: { userId: string; categoryId: number; subCategoryId: number; prompt: string }, { rejectWithValue }) => {
+  async (
+    data: { categoryId: number; subCategoryId: number; prompt1: string },
+    { rejectWithValue }
+  ) => {
     try {
       return await sendPrompt(data);
     } catch (err: any) {
@@ -72,6 +75,7 @@ export const sendPromptThunk = createAsyncThunk(
     }
   }
 );
+
 
 // שליפת היסטוריית למידה
 export const fetchMyHistoryThunk = createAsyncThunk(

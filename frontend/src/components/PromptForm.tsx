@@ -20,12 +20,12 @@ export default function PromptForm({ categoryId, subCategoryId }: Props) {
     if (!user || !categoryId || !subCategoryId) return;
     dispatch(
       sendPromptThunk({
-        userId: user.id,
         categoryId,
         subCategoryId,
-        prompt,
+        prompt1: prompt,
       })
     );
+
     setPrompt('');
   };
 

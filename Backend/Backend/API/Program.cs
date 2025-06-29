@@ -75,6 +75,16 @@ builder.Services.AddScoped<IPromptBl, PromptBl>();
 // BlManager
 builder.Services.AddScoped<IBl, BlManager>();
 
+builder.Services.AddSingleton<OpenAiService>(provider =>
+{
+    var apiKey = builder.Configuration["OpenAi:ApiKey"];
+    if (string.IsNullOrEmpty(apiKey))
+    {
+        throw new InvalidOperationException("OpenAi:ApiKey configuration is missing or empty.");
+    }
+    return new OpenAiService(apiKey);
+});
+
 // Swagger
 //builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

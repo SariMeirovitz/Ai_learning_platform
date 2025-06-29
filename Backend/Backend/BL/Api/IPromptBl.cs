@@ -1,5 +1,6 @@
 using DAL.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using BL.Models;
 
 namespace BL.Api
@@ -11,6 +12,7 @@ namespace BL.Api
         Prompt Create(BLPrompt prompt);
         Prompt Update(BLPrompt prompt);
         void Delete(int id);
-        public IEnumerable<Prompt> GetByUserId(int userId);
+        IEnumerable<Prompt> GetByUserId(int userId);
+        Task<Prompt> SubmitPromptAsync(BLPrompt promptBl);
     }
 }

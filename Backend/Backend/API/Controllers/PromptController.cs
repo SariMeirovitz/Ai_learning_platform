@@ -3,6 +3,7 @@ using BL.Models;
 using DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -71,6 +72,31 @@ namespace API.Controllers
         {
             _promptBl.Delete(id);
             return NoContent();
+        }
+
+        //[HttpPost("submit")]
+        //public async Task<ActionResult<Prompt>> SubmitAsync([FromBody] BLPrompt prompt)
+        //{
+        //    if (!ModelState.IsValid)
+        //        return BadRequest(ModelState);
+
+        //    var created = await _promptBl.SubmitPromptAsync(prompt);
+        //    return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
+        //}
+        [HttpPost("submit")]
+        public async Task<ActionResult<Prompt>> SubmitAsync([FromBody] BLPrompt prompt)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+                return Unauthorized();
+
+            prompt.UserId = userId; // דריסה של מה שבא מהקליינט
+
+            var created = await _promptBl.SubmitPromptAsync(prompt);
+            return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
         }
     }
 }
