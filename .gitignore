@@ -38,3 +38,5 @@ pnpm-lock.yaml
 # 🧬 Databases & other binaries
 *.mdf
 *.ldf
+
+appsettings.json
