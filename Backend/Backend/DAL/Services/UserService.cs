@@ -45,5 +45,18 @@ namespace DAL.Services
             _context.SaveChanges();
             return entity;
         }
+        public async Task<User?> GetUserByNameAndPhone(string name, string phone)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Name == name && u.Phone == phone);
+        }
+
+        public async Task<List<User>> GetAllUsersWithPrompts()
+        {
+            return await _context.Users
+                .Include(u => u.Prompts)
+                .ToListAsync();
+        }
+
+
     }
 }

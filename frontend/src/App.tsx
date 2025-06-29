@@ -5,13 +5,15 @@ import HomePage from './pages/HomePage';
 import Register from './components/Register';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
-
+import NavBar from './components/NavBar';
+import AdminDashboard from './components/AdminDashboard';
 
 function App() {
   const user = useSelector((state: RootState) => state.user.user);
 
   return (
     <Router>
+      <NavBar />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/register" element={<Register />} />
@@ -19,6 +21,12 @@ function App() {
         <Route
           path="/dashboard"
           element={user ? <Dashboard /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/admin-dashboard"
+          element={
+            user?.isAdmin === true ? <AdminDashboard /> : <Navigate to="/" />
+          }
         />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

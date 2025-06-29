@@ -11,5 +11,6 @@ namespace BL.Api
         Prompt Create(BLPrompt prompt);
         Prompt Update(BLPrompt prompt);
         void Delete(int id);
+        public IEnumerable<Prompt> GetByUserId(int userId);
     }
 }

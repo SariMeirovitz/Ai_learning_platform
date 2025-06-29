@@ -11,5 +11,8 @@ namespace BL.Api
         User Create(BLUser user);
         User Update(BLUser user);
         void Delete(int id);
+        Task<User?> GetUserByNameAndPhone(string name, string phone);
+        Task<List<UserWithPromptsDto>> GetAllUsersWithPrompts();
+
     }
 }

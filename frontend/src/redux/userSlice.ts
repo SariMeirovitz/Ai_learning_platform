@@ -5,6 +5,7 @@ export interface User {
   id: string;
   name: string;
   phone: string;
+  isAdmin?: boolean; 
 }
 
 interface UserState {
@@ -54,15 +55,19 @@ const userSlice = createSlice({
         state.success = false;
       })
       // login
-      .addCase(loginUserThunk.pending, state => {
+        .addCase(loginUserThunk.pending, state => {
         state.loading = true;
         state.error = null;
         state.success = false;
       })
-      .addCase(loginUserThunk.fulfilled, (state, action: PayloadAction<User>) => {
+      .addCase(loginUserThunk.fulfilled, (state, action: PayloadAction<{ token: string; user: User }>) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload.user; // כולל isAdmin אם יש
         state.success = true;
+        // שמור את ה־token ב־localStorage
+        localStorage.setItem('token', action.payload.token);
+          localStorage.setItem('user', JSON.stringify(action.payload.user));
+
       })
       .addCase(loginUserThunk.rejected, (state, action) => {
         state.loading = false;

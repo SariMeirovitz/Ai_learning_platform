@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { sendPromptThunk, fetchUserPromptsThunk } from './thunk';
+import { fetchMyHistoryThunk, sendPromptThunk } from './thunk';
 
 interface Prompt {
   id: number;
@@ -52,15 +52,15 @@ const promptSlice = createSlice({
         state.error = action.payload as string;
       })
       // שליפת היסטוריית למידה
-      .addCase(fetchUserPromptsThunk.pending, state => {
+      .addCase(fetchMyHistoryThunk.pending, state => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchUserPromptsThunk.fulfilled, (state, action) => {
+      .addCase(fetchMyHistoryThunk.fulfilled, (state, action) => {
         state.loading = false;
         state.prompts = action.payload || [];
       })
-      .addCase(fetchUserPromptsThunk.rejected, (state, action) => {
+      .addCase(fetchMyHistoryThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

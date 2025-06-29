@@ -42,5 +42,9 @@ namespace DAL.Services
             _context.SaveChanges();
             return entity;
         }
+        public IEnumerable<Prompt> GetByUserId(int userId)
+        {
+            return _context.Prompts.Where(p => p.UserId == userId).ToList();
+        }
     }
 }

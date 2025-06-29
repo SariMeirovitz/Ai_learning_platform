@@ -62,5 +62,11 @@ namespace BL.Services
             var context = new ValidationContext(model, null, null);
             Validator.ValidateObject(model, context, validateAllProperties: true);
         }
+
+        public IEnumerable<Prompt> GetByUserId(int userId)
+        {
+            return _promptDal.GetByUserId(userId);
+        }
+
     }
 }

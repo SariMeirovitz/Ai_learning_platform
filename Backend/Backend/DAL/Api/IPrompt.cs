@@ -9,5 +9,6 @@ namespace DAL.Api
 {
     public interface IPrompt: ICrud<Prompt>
     {
+        public IEnumerable<Prompt> GetByUserId(int userId);
     }
 }

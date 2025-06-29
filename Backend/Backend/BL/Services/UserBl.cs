@@ -48,6 +48,28 @@ namespace BL.Services
         }
 
         public void Delete(int id) => _userDal.Delete(id);
+        public async Task<User?> GetUserByNameAndPhone(string name, string phone)
+        {
+            return await _userDal.GetUserByNameAndPhone(name, phone);
+        }
+        public async Task<List<UserWithPromptsDto>> GetAllUsersWithPrompts()
+        {
+            var users = await _userDal.GetAllUsersWithPrompts();
+
+            return users.Select(u => new UserWithPromptsDto
+            {
+                UserId = u.Id,
+                Name = u.Name,
+                Phone = u.Phone,
+                Prompts = u.Prompts.Select(p => new PromptDto
+                {
+                    Prompt = p.Prompt1,
+                    Response = p.Response,
+                    CreatedAt = p.CreatedAt ?? DateTime.MinValue
+                }).ToList()
+            }).ToList();
+        }
+
 
         private void ValidateModel(object model)
         {

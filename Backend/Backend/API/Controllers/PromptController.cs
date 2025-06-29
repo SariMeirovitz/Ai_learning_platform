@@ -1,10 +1,12 @@
 ﻿using BL.Api;
 using BL.Models;
 using DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class PromptController : ControllerBase
@@ -14,6 +16,23 @@ namespace API.Controllers
         public PromptController(IBl bl)
         {
             _promptBl = bl.Prompt;
+        }
+
+        [HttpGet("my-history")]
+        public ActionResult<IEnumerable<Prompt>> GetMyHistory()
+        {
+            // שולפים את ה־userId מהטוקן
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+                return Unauthorized();
+
+            if (!int.TryParse(userIdClaim.Value, out int userId))
+                return Unauthorized();
+
+            // משתמשים ב־BL כדי לקבל את הפרומפטים לפי userId
+            var prompts = _promptBl.GetByUserId(userId);
+
+            return Ok(prompts);
         }
 
         [HttpGet("{id}")]

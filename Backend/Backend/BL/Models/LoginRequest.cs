@@ -8,6 +8,7 @@ namespace BL.Models
 {
     public class LoginRequest
     {
+        public string Name { get; set; }
         public string Phone { get; set; }
 
     }

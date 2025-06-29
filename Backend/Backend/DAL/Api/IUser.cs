@@ -9,5 +9,8 @@ namespace DAL.Api
 {
     public interface IUser:ICrud<User>
     {
+        Task<User?> GetUserByNameAndPhone(string name, string phone);
+        Task<List<User>> GetAllUsersWithPrompts();
+
     }
 }

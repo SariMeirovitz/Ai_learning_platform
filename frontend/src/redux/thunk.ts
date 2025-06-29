@@ -4,8 +4,9 @@ import {
   fetchCategories,
   fetchSubCategories,
   sendPrompt,
-  fetchUserPrompts,
   loginUser,
+  fetchAllUsersWithPrompts,
+  fetchMyHistory,
 } from '../services/api';
 import type { User } from './userSlice';
 
@@ -21,11 +22,15 @@ export const registerUserThunk = createAsyncThunk<User, { name: string; phone: s
   }
 );
 //התחברות
-export const loginUserThunk = createAsyncThunk<User, { phone: string }>(
+export const loginUserThunk = createAsyncThunk<
+  { token: string; user: User }, // טיפוס ההחזרה החדש
+  { name: string; phone: string } // שים לב: גם name וגם phone
+>(
   'user/login',
-  async ({ phone }, { rejectWithValue }) => {
+  async ({ name, phone }, { rejectWithValue }) => {
     try {
-      return await loginUser(phone);
+      // loginUser צריך להחזיר { token, user }
+      return await loginUser(name, phone);
     } catch (err: any) {
       return rejectWithValue(err.message || 'Login failed');
     }
@@ -69,13 +74,24 @@ export const sendPromptThunk = createAsyncThunk(
 );
 
 // שליפת היסטוריית למידה
-export const fetchUserPromptsThunk = createAsyncThunk(
-  'prompts/fetchUser',
-  async (userId: string, { rejectWithValue }) => {
+export const fetchMyHistoryThunk = createAsyncThunk(
+  'prompts/fetchMyHistory',
+  async (_, { rejectWithValue }) => {
     try {
-      return await fetchUserPrompts(userId);
+      return await fetchMyHistory();
     } catch (err: any) {
-      return rejectWithValue(err.message || 'Failed to fetch user prompts');
+      return rejectWithValue(err.message || 'Failed to fetch my history');
+    }
+  }
+);
+
+export const fetchAllUsersWithPromptsThunk = createAsyncThunk(
+  'admin/fetchAllUsersWithPrompts',
+  async (_, { rejectWithValue }) => {
+    try {
+      return await fetchAllUsersWithPrompts();
+    } catch (err: any) {
+      return rejectWithValue(err.message || 'Failed to fetch admin data');
     }
   }
 );

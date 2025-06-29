@@ -5,8 +5,17 @@ using DAL;
 using DAL.Models;
 using DAL.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using API.Services;
+using Microsoft.OpenApi.Models;
 
+// --- הגדרת JWT ---
 var builder = WebApplication.CreateBuilder(args);
+
+// הוספת מפתח סודי מהגדרות
+var jwtKey = builder.Configuration["Jwt:Key"] ?? "SuperSecretKey123!";
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -22,6 +31,27 @@ builder.Services.AddCors(options =>
                   .AllowAnyHeader();
         });
 });
+
+// JWT Authentication
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+    };
+});
+
+// רישום JwtService
+builder.Services.AddSingleton<JwtService>();
 
 // רישום DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -46,8 +76,33 @@ builder.Services.AddScoped<IPromptBl, PromptBl>();
 builder.Services.AddScoped<IBl, BlManager>();
 
 // Swagger
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Mamash API", Version = "v1" });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter 'Bearer' [space] and then your token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
 
 var app = builder.Build();
 
@@ -62,8 +117,12 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowSpecificOrigin");
 
+// --- הפעלת Authentication ---
+app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
+
