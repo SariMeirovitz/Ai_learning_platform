@@ -3,6 +3,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchCategoriesThunk, fetchSubCategoriesThunk } from '../redux/thunk';
 import type { AppDispatch, RootState } from '../redux/store';
 import type { Category, SubCategory } from '../redux/categorySlice';
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  CircularProgress,
+  Alert,
+} from '@mui/material';
 
 interface Props {
   categoryId: number | null;
@@ -38,43 +47,59 @@ export default function CategorySelect({
   );
 
   return (
-    <div style={{ display: 'flex', gap: 12, alignItems: 'center', direction: 'rtl' }}>
-      <label>
-        קטגוריה:&nbsp;
-        <select
+    <Box
+      sx={{
+        display: 'flex',
+        gap: 3,
+        alignItems: 'center',
+        direction: 'rtl',
+        my: 2,
+        flexWrap: 'wrap',
+      }}
+    >
+      <FormControl sx={{ minWidth: 180 }} size="small">
+        <InputLabel id="category-label">קטגוריה</InputLabel>
+        <Select
+          labelId="category-label"
           value={categoryId ?? ''}
+          label="קטגוריה"
           onChange={e =>
             onCategoryChange(e.target.value ? Number(e.target.value) : null)
           }
           disabled={loading}
         >
-          <option value="">בחר קטגוריה</option>
+          <MenuItem value="">
+            <em>בחר קטגוריה</em>
+          </MenuItem>
           {categories.map((cat: Category) => (
-            <option key={cat.id} value={cat.id}>
+            <MenuItem key={cat.id} value={cat.id}>
               {cat.name}
-            </option>
+            </MenuItem>
           ))}
-        </select>
-      </label>
-      <label>
-        תת־קטגוריה:&nbsp;
-        <select
+        </Select>
+      </FormControl>
+      <FormControl sx={{ minWidth: 180 }} size="small" disabled={!categoryId || loading}>
+        <InputLabel id="sub-category-label">תת־קטגוריה</InputLabel>
+        <Select
+          labelId="sub-category-label"
           value={subCategoryId ?? ''}
+          label="תת־קטגוריה"
           onChange={e =>
             onSubCategoryChange(e.target.value ? Number(e.target.value) : null)
           }
-          disabled={!categoryId || loading}
         >
-          <option value="">בחר תת־קטגוריה</option>
+          <MenuItem value="">
+            <em>בחר תת־קטגוריה</em>
+          </MenuItem>
           {filteredSubCategories.map((sub: SubCategory) => (
-            <option key={sub.id} value={sub.id}>
+            <MenuItem key={sub.id} value={sub.id}>
               {sub.name}
-            </option>
+            </MenuItem>
           ))}
-        </select>
-      </label>
-      {loading && <span style={{ marginRight: 8 }}>טוען...</span>}
-      {error && <span style={{ color: 'red', marginRight: 8 }}>{error}</span>}
-    </div>
+        </Select>
+      </FormControl>
+      {loading && <CircularProgress size={24} sx={{ mx: 2 }} />}
+      {error && <Alert severity="error" sx={{ mx: 2 }}>{error}</Alert>}
+    </Box>
   );
 }

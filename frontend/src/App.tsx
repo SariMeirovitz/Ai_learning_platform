@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import type { RootState } from './redux/store';
-import HomePage from './pages/HomePage';
+import HomePage from './components/HomePage';
 import Register from './components/Register';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';

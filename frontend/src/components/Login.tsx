@@ -4,6 +4,14 @@ import type { AppDispatch, RootState } from '../redux/store';
 import { loginUserThunk } from '../redux/thunk';
 import { clearStatus } from '../redux/userSlice';
 import { useNavigate, Link } from 'react-router-dom';
+import {
+  Paper,
+  TextField,
+  Button,
+  Typography,
+  CircularProgress,
+  Alert,
+} from '@mui/material';
 
 export default function Login() {
   const dispatch = useDispatch<AppDispatch>();
@@ -34,29 +42,75 @@ export default function Login() {
   }, [success, error, dispatch, navigate, user]);
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center', direction: 'rtl', maxWidth: 320, margin: '0 auto' }}>
-      <h2 style={{ margin: 0 }}>התחברות</h2>
-      <input
-        type="text"
-        placeholder="שם"
+    <Paper
+      elevation={4}
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        maxWidth: 350,
+        mx: 'auto',
+        mt: 10,
+        p: 4,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+        alignItems: 'center',
+        direction: 'rtl',
+        borderRadius: 3,
+        boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
+        background: 'rgba(255,255,255,0.95)',
+      }}
+    >
+      <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 700 }}>
+        התחברות
+      </Typography>
+      <TextField
+        label="שם"
         value={name}
         onChange={e => setName(e.target.value)}
         required
+        fullWidth
+        inputProps={{ dir: 'rtl' }}
+        autoFocus
       />
-      <input
+      <TextField
+        label="טלפון"
         type="tel"
-        placeholder="טלפון"
         value={phone}
         onChange={e => setPhone(e.target.value)}
         required
+        fullWidth
+        inputProps={{ dir: 'rtl' }}
       />
-      <button type="submit" disabled={loading}>התחבר</button>
-      {loading && <span>טוען...</span>}
-      {error && <div style={{ color: 'red' }}>{error}</div>}
-      {success && <div style={{ color: 'green' }}>התחברת בהצלחה! מעביר אותך לאזור האישי...</div>}
-      <div style={{ marginTop: 8 }}>
-        אין לך חשבון? <Link to="/register">להרשמה</Link>
-      </div>
-    </form>
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        fullWidth
+        disabled={loading}
+        sx={{
+          mt: 1,
+          fontWeight: 600,
+          letterSpacing: 1,
+          borderRadius: 2,
+          boxShadow: '0 2px 8px 0 rgba(25, 118, 210, 0.08)',
+        }}
+      >
+        התחבר
+      </Button>
+      {loading && <CircularProgress size={24} sx={{ mt: 1 }} />}
+      {error && <Alert severity="error">{error}</Alert>}
+      {success && (
+        <Alert severity="success">
+          התחברת בהצלחה! מעביר אותך לאזור האישי...
+        </Alert>
+      )}
+      <Typography variant="body2" sx={{ mt: 2 }}>
+        אין לך חשבון?{' '}
+        <Link to="/register" style={{ color: '#1976d2', textDecoration: 'none', fontWeight: 600 }}>
+          להרשמה
+        </Link>
+      </Typography>
+    </Paper>
   );
 }

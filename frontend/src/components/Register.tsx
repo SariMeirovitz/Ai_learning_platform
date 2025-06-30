@@ -4,6 +4,15 @@ import { clearStatus } from '../redux/userSlice';
 import type { AppDispatch, RootState } from '../redux/store';
 import { registerUserThunk } from '../redux/thunk';
 import { useNavigate, Link } from 'react-router-dom';
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  CircularProgress,
+  Alert,
+  Paper,
+} from '@mui/material';
 
 export default function Register() {
   const dispatch = useDispatch<AppDispatch>();
@@ -34,29 +43,65 @@ export default function Register() {
   }, [success, error, dispatch, navigate]);
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center', direction: 'rtl', maxWidth: 320, margin: '0 auto' }}>
-      <h2 style={{ margin: 0 }}>הרשמה</h2>
-      <input
-        type="text"
-        placeholder="שם"
+    <Box
+      component={Paper}
+      elevation={3}
+      onSubmit={handleSubmit} // הוסף כאן!
+      sx={{
+        maxWidth: 350,
+        mx: 'auto',
+        mt: 8,
+        p: 4,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+        alignItems: 'center',
+        direction: 'rtl',
+      }}
+    >
+      <Typography variant="h5" component="h2" gutterBottom>
+        הרשמה
+      </Typography>
+      <TextField
+        label="שם"
         value={name}
         onChange={e => setName(e.target.value)}
         required
+        fullWidth
+        inputProps={{ dir: 'rtl' }}
       />
-      <input
+      <TextField
+        label="טלפון"
         type="tel"
-        placeholder="טלפון"
         value={phone}
         onChange={e => setPhone(e.target.value)}
         required
+        fullWidth
+        inputProps={{ dir: 'rtl' }}
       />
-      <button type="submit" disabled={loading}>הירשם</button>
-      {loading && <span>טוען...</span>}
-      {error && <div style={{ color: 'red' }}>{error}</div>}
-      {success && <div style={{ color: 'green' }}>נרשמת בהצלחה! מעבירים אותך לאזור האישי...</div>}
-      <div style={{ marginTop: 8 }}>
-        כבר יש לך חשבון? <Link to="/login">התחבר</Link>
-      </div>
-    </form>
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        fullWidth
+        disabled={loading}
+        sx={{ mt: 1 }}
+      >
+        הירשם
+      </Button>
+      {loading && <CircularProgress size={24} sx={{ mt: 1 }} />}
+      {error && <Alert severity="error">{error}</Alert>}
+      {success && (
+        <Alert severity="success">
+          נרשמת בהצלחה! מעבירים אותך לאזור האישי...
+        </Alert>
+      )}
+      <Typography variant="body2" sx={{ mt: 2 }}>
+        כבר יש לך חשבון?{' '}
+        <Link to="/login" style={{ color: '#1976d2', textDecoration: 'none' }}>
+          התחבר
+        </Link>
+      </Typography>
+    </Box>
   );
 }

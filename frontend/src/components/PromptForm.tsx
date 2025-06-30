@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { sendPromptThunk } from '../redux/thunk';
 import { clearPromptState } from '../redux/promptSlice';
 import type { AppDispatch, RootState } from '../redux/store';
+import { Box, TextField, Button, CircularProgress, Alert, IconButton } from '@mui/material';
+import ClearIcon from '@mui/icons-material/Clear';
 
 interface Props {
   categoryId: number | null;
@@ -25,37 +27,61 @@ export default function PromptForm({ categoryId, subCategoryId }: Props) {
         prompt1: prompt,
       })
     );
-
     setPrompt('');
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', gap: 8, marginTop: 32 }}>
-      <input
-        type="text"
-        placeholder="מה תרצה לשאול?"
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        display: 'flex',
+        gap: 2,
+        alignItems: 'center',
+        mt: 4,
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+      }}
+    >
+      <TextField
+        label="מה תרצה לשאול?"
         value={prompt}
         onChange={e => setPrompt(e.target.value)}
         required
         disabled={loading}
+        variant="outlined"
+        size="small"
+        sx={{ minWidth: 250 }}
+        inputProps={{ dir: 'rtl' }}
       />
-      <button type="submit" disabled={loading || !user || !categoryId || !subCategoryId}>
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        disabled={loading || !user || !categoryId || !subCategoryId}
+        sx={{ minWidth: 80 }}
+      >
         שלח
-      </button>
-      {loading && <span>טוען...</span>}
-      {error && <span style={{ color: 'red' }}>{error}</span>}
+      </Button>
+      {loading && <CircularProgress size={24} />}
+      {error && <Alert severity="error" sx={{ ml: 2 }}>{error}</Alert>}
       {response && (
-        <span style={{ color: 'green', marginRight: 8 }}>
+        <Alert
+          severity="success"
+          sx={{ ml: 2, display: 'flex', alignItems: 'center' }}
+          action={
+            <IconButton
+              color="inherit"
+              size="small"
+              onClick={() => dispatch(clearPromptState())}
+            >
+              <ClearIcon fontSize="small" />
+            </IconButton>
+          }
+        >
           {response}
-          <button
-            type="button"
-            onClick={() => dispatch(clearPromptState())}
-            style={{ marginRight: 8 }}
-          >
-            נקה
-          </button>
-        </span>
+        </Alert>
       )}
-    </form>
+    </Box>
   );
 }
