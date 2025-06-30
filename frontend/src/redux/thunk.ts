@@ -11,13 +11,13 @@ import {
 import type { User } from './userSlice';
 
 // הרשמה
-export const registerUserThunk = createAsyncThunk<User, { name: string; phone: string }>(
+export const registerUserThunk = createAsyncThunk(
   'user/register',
-  async ({ name, phone }, { rejectWithValue }) => {
+  async ({ name, phone }: { name: string; phone: string }, thunkAPI) => {
     try {
-      return await registerUser(name, phone);
+      return await registerUser(name, phone); // <-- כאן!
     } catch (err: any) {
-      return rejectWithValue(err.message || 'Registration failed');
+      return thunkAPI.rejectWithValue(err.message || 'Registration failed');
     }
   }
 );

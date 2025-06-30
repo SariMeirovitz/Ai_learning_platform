@@ -12,6 +12,7 @@ import {
   CircularProgress,
   Alert,
 } from '@mui/material';
+import { clearPromptState } from '../redux/promptSlice';
 
 export default function Login() {
   const dispatch = useDispatch<AppDispatch>();
@@ -31,6 +32,7 @@ export default function Login() {
     if (success && user) {
       const timer = setTimeout(() => {
         dispatch(clearStatus());
+        dispatch(clearPromptState());
         navigate(user.isAdmin ? '/admin-dashboard' : '/dashboard');
       }, 1500);
       return () => clearTimeout(timer);
