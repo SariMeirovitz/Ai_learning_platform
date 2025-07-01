@@ -104,15 +104,20 @@ Your task is to create engaging, clear, and structured educational lessons.
 Student's request: ""{userPrompt}""
 
 Instructions:
-- If the student's request is a valid question or learning request about {category} - {subCategory}, provide a comprehensive lesson that includes:
-  1. A clear explanation of the concept
-  2. Real-world examples
-  3. Key takeaways
-  4. Suggested next steps for learning
-- Make your response engaging, easy to understand, and well-structured.
-- If the student's request is NOT a valid question or learning request about {category} - {subCategory}, politely respond:
-  ""Your question is not valid for this topic. Please ask a question related to {category} - {subCategory}.""
+1. **First**, analyze whether the student's request is clearly related to the topic of {category} - {subCategory}.
+   - If the request is not relevant to this topic, respond **only** with:
+     ""Your question is not valid for this topic. Please ask a question related to {category} - {subCategory}.""
+   - Do **not** provide any lesson or explanation if the request is not relevant.
+
+2. If the request **is** valid and related, provide a comprehensive lesson that includes:
+   - A clear explanation of the concept
+   - Real-world examples
+   - Key takeaways
+   - Suggested next steps for learning
+
+3. Make your response engaging, easy to understand, and well-structured.
 ";
         }
+
     }
 }
